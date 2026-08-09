@@ -48,7 +48,7 @@
             </div>
 
             <!-- aria-pressed kommuniziert den Auswahlzustand an Screenreader (WCAG SC 4.1.2) -->
-            <fieldset>
+            <fieldset id="clothing">
               <legend class="sr-only">Art der Kleidung auswählen (Pflichtfeld)</legend>
               <div class="grid md:grid-cols-2 gap-3">
                 <button
@@ -85,7 +85,7 @@
               </div>
             </div>
 
-            <fieldset>
+            <fieldset id="crisisArea">
               <legend class="sr-only">Krisengebiet auswählen (Pflichtfeld)</legend>
               <div class="grid md:grid-cols-2 gap-3">
                 <button
@@ -198,8 +198,36 @@ const toggleClothingType = (value) => {
   validateField('clothing')
 }
 
+// ── Fehlertolerante Navigation zum ersten Fehler ──────────────────────────
+const scrollToFirstError = () => {
+  const firstKey = Object.keys(errors)[0]
+  if (!firstKey) return
+  
+  let el = null
+  
+  // Für Fieldsets (Toggle-Gruppen): fokussiere erste Button
+  if (['clothing', 'crisisArea'].includes(firstKey)) {
+    const fieldset = document.querySelector(`#${firstKey}`)
+    if (fieldset) {
+      el = fieldset.querySelector('button')
+    }
+  }
+  // Für andere Felder: nutze stabile IDs
+  else {
+    el = document.querySelector(`#${firstKey}`)
+  }
+  
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    setTimeout(() => el.focus?.(), 300)
+  }
+}
+
 const handleSubmit = async () => {
-  if (!validate()) return
+  if (!validate()) {
+    scrollToFirstError()
+    return
+  }
 
   isSubmitting.value = true
   try {

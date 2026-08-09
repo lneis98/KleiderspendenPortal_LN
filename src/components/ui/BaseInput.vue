@@ -132,12 +132,16 @@ const props = defineProps({
   autocomplete: {
     type: String,
     default: undefined
+  },
+  id: {
+    type: String,
+    default: ''
   }
 })
 
 const emit = defineEmits(['update:modelValue', 'blur', 'focus'])
 
-const inputId = useId()
+const inputId = props.id || useId()
 
 // inputmode: explizit übergebener Wert hat Vorrang; date-Felder bekommen standardmäßig "numeric"
 const resolvedInputmode = computed(() => {

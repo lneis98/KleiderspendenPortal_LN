@@ -36,6 +36,7 @@
 
             <div class="grid md:grid-cols-2 gap-6">
               <BaseInput
+                id="firstName"
                 v-model="formData.firstName"
                 label="Vorname"
                 required
@@ -45,6 +46,7 @@
                 @blur="validateField('firstName')"
               />
               <BaseInput
+                id="lastName"
                 v-model="formData.lastName"
                 label="Nachname"
                 required
@@ -54,6 +56,7 @@
                 @blur="validateField('lastName')"
               />
               <BaseInput
+                id="phone"
                 v-model="formData.phone"
                 label="Telefonnummer"
                 type="tel"
@@ -64,6 +67,7 @@
                 @blur="validateField('phone')"
               />
               <BaseInput
+                id="email"
                 v-model="formData.email"
                 label="E-Mail"
                 type="email"
@@ -91,6 +95,7 @@
             <div class="grid md:grid-cols-2 gap-6 mb-6">
               <div class="md:col-span-2">
                 <BaseInput
+                  id="street"
                   v-model="formData.street"
                   label="Straße und Hausnummer"
                   required
@@ -101,6 +106,7 @@
                 />
               </div>
               <BaseInput
+                id="plz"
                 v-model="formData.plz"
                 label="Postleitzahl"
                 required
@@ -113,6 +119,7 @@
                 @blur="validateField('plz')"
               />
               <BaseInput
+                id="city"
                 v-model="formData.city"
                 label="Ort"
                 required
@@ -457,7 +464,25 @@ const updatePickupDate = () => {
 const scrollToFirstError = () => {
   const firstKey = Object.keys(errors)[0]
   if (!firstKey) return
-  const el = document.querySelector(`[id="${firstKey}"], [aria-describedby*="${firstKey}"]`)
+  
+  let el = null
+  
+  // Für Fieldsets (Toggle-Gruppen): fokussiere erste Button
+  if (['clothing', 'quantity', 'crisisArea'].includes(firstKey)) {
+    const fieldset = document.querySelector(`#${firstKey}`)
+    if (fieldset) {
+      el = fieldset.querySelector('button')
+    }
+  }
+  // Für pickupDate: fokussiere erste Select
+  else if (firstKey === 'pickupDate') {
+    el = document.querySelector('#pickup-day')
+  }
+  // Für andere Felder: nutze stabile IDs oder Aria-Beschreibung
+  else {
+    el = document.querySelector(`#${firstKey}, [aria-describedby*="${firstKey}"]`)
+  }
+  
   if (el) {
     el.scrollIntoView({ behavior: 'smooth', block: 'center' })
     setTimeout(() => el.focus?.(), 300)
