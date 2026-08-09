@@ -392,12 +392,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseInput from '@/components/ui/BaseInput.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { useDonationStore } from '@/stores/donationStore'
 import { useUIStore } from '@/stores/uiStore'
+import { useFormValidation } from '@/composables/useFormValidation'
 import ValidationService from '@/services/validationService'
 import CONFIG from '@/utils/constants'
 
@@ -411,8 +412,8 @@ const clothingTypes  = CONFIG.FORM_CLOTHING_TYPES
 const quantityOptions = CONFIG.FORM_QUANTITY_OPTIONS
 const crisisAreas    = CONFIG.CRISIS_AREAS
 
-// ── Formular-State ─────────────────────────────────────────────────────────
-const formData = reactive({
+// ── Zentrale Formularvalidierung über Composable ──────────────────────────
+const initialFormData = {
   firstName:       '',
   lastName:        '',
   phone:           '',
@@ -431,9 +432,9 @@ const formData = reactive({
   pickupTime:      'morning',
   comments:        '',
   terms:           false
-})
+}
 
-const errors = reactive({})
+const { formData, errors, validateField, validate } = useFormValidation(initialFormData)
 
 // ── Jahresoptionen: ab morgen, 2 Jahre in die Zukunft ──────────────────────
 const yearOptions = computed(() => {
@@ -459,127 +460,7 @@ const updatePickupDate = () => {
   }
 }
 
-// ── Einzelfeld-Validierung (wird bei blur UND beim Submit-Sammeldurchlauf genutzt) ──
-const validateField = (fieldName) => {
-  delete errors[fieldName]
-
-  switch (fieldName) {
-    case 'firstName':
-      if (!formData.firstName)
-        errors.firstName = 'Vorname ist erforderlich'
-      else if (formData.firstName.length < 2)
-        errors.firstName = 'Vorname muss mindestens 2 Zeichen lang sein'
-      else if (!/^[a-zA-ZäöüÄÖÜß\s\-]+$/.test(formData.firstName))
-        errors.firstName = 'Vorname darf nur Buchstaben, Leerzeichen und Bindestriche enthalten'
-      break
-
-    case 'lastName':
-      if (!formData.lastName)
-        errors.lastName = 'Nachname ist erforderlich'
-      else if (formData.lastName.length < 2)
-        errors.lastName = 'Nachname muss mindestens 2 Zeichen lang sein'
-      else if (!/^[a-zA-ZäöüÄÖÜß\s\-]+$/.test(formData.lastName))
-        errors.lastName = 'Nachname darf nur Buchstaben, Leerzeichen und Bindestriche enthalten'
-      break
-
-    case 'phone': {
-      const digits = (formData.phone || '').replace(/\D/g, '')
-      if (!formData.phone)
-        errors.phone = 'Telefonnummer ist erforderlich'
-      else if (digits.length < 8)
-        errors.phone = 'Telefonnummer muss mindestens 8 Ziffern haben'
-      else if (digits.length > 15)
-        errors.phone = 'Telefonnummer zu lang (max. 15 Ziffern)'
-      break
-    }
-
-    case 'email':
-      if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-        errors.email = 'Bitte geben Sie eine gültige E-Mail-Adresse ein'
-      break
-
-    case 'street':
-      if (!formData.street)
-        errors.street = 'Straße und Hausnummer sind erforderlich'
-      else if (formData.street.length < 5)
-        errors.street = 'Mindestens 5 Zeichen erforderlich'
-      else if (!/^.+\s+\d+.*$/.test(formData.street))
-        errors.street = 'Bitte Straße und Hausnummer angeben (z.B. Hauptstraße 123)'
-      break
-
-    case 'plz':
-      if (!formData.plz)
-        errors.plz = 'Postleitzahl ist erforderlich'
-      else if (!/^\d{5}$/.test(formData.plz))
-        errors.plz = 'Postleitzahl muss genau 5 Ziffern haben'
-      else {
-        // Anforderung h: Die ersten beiden Stellen der Abholadresse müssen mit der
-        // Geschäftsstellen-PLZ (69488) übereinstimmen → ValidationService prüft das.
-        const result = ValidationService.validatePickupProximity(formData.plz, CONFIG.BUSINESS_LOCATION.plz)
-        if (!result.isValid) errors.plz = result.error
-      }
-      break
-
-    case 'city':
-      if (!formData.city)
-        errors.city = 'Ortsname ist erforderlich'
-      else if (formData.city.length < 2)
-        errors.city = 'Ortsname zu kurz'
-      else if (!/^[a-zA-ZäöüÄÖÜß\s\-]+$/.test(formData.city))
-        errors.city = 'Nur Buchstaben, Leerzeichen und Bindestriche erlaubt'
-      break
-
-    case 'clothing':
-      if (formData.clothing.length === 0)
-        errors.clothing = 'Bitte wählen Sie mindestens eine Kleidungsart aus'
-      break
-
-    case 'quantity':
-      if (!formData.quantity)
-        errors.quantity = 'Bitte wählen Sie eine Mengenangabe aus'
-      break
-
-    case 'crisisArea':
-      if (!formData.crisisArea)
-        errors.crisisArea = 'Bitte wählen Sie ein Zielgebiet aus'
-      break
-
-    case 'pickupDate':
-      if (!formData.pickupDate) {
-        errors.pickupDate = 'Bitte wählen Sie ein Datum aus'
-      } else {
-        const selected = new Date(formData.pickupDate)
-        const tomorrow = new Date()
-        tomorrow.setDate(tomorrow.getDate() + 1)
-        tomorrow.setHours(0, 0, 0, 0)
-        if (selected < tomorrow)
-          errors.pickupDate = 'Abholtermin muss mindestens morgen sein'
-      }
-      break
-
-    case 'terms':
-      if (!formData.terms)
-        errors.terms = 'Sie müssen den Datenschutzbestimmungen zustimmen'
-      break
-  }
-}
-
-// ── Submit-Validierung ruft validateField für jedes Pflichtfeld auf ─────────
-// Dadurch ist die Logik nur EINMAL definiert (in validateField), kein Code-Duplikat.
-const validate = () => {
-  Object.keys(errors).forEach(key => delete errors[key])
-
-  const fields = [
-    'firstName', 'lastName', 'phone', 'email',
-    'street', 'plz', 'city',
-    'clothing', 'quantity', 'crisisArea',
-    'pickupDate', 'terms'
-  ]
-  fields.forEach(field => validateField(field))
-
-  return Object.keys(errors).length === 0
-}
-
+// ── Fehlertolerante Navigation zum ersten Fehler ──────────────────────────
 const scrollToFirstError = () => {
   const firstKey = Object.keys(errors)[0]
   if (!firstKey) return

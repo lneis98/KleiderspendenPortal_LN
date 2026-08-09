@@ -161,11 +161,12 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import { useDonationStore } from '@/stores/donationStore'
 import { useUIStore } from '@/stores/uiStore'
+import { useFormValidation } from '@/composables/useFormValidation'
 import CONFIG from '@/utils/constants'
 
 const router = useRouter()
@@ -182,40 +183,13 @@ const businessLocation = CONFIG.BUSINESS_LOCATION
 
 // Minimaler Formular-State gemäß Aufgabenstellung b.f):
 // "nur die Art der Kleidung und ein aktuelles Krisengebiet"
-const formData = reactive({
+const initialFormData = {
   clothing:  [],
   crisisArea: '',
   terms:      false
-})
-
-const errors = reactive({})
-
-const validateField = (fieldName) => {
-  delete errors[fieldName]
-
-  switch (fieldName) {
-    case 'clothing':
-      if (formData.clothing.length === 0)
-        errors.clothing = 'Bitte wählen Sie mindestens eine Kleidungsart aus'
-      break
-
-    case 'crisisArea':
-      if (!formData.crisisArea)
-        errors.crisisArea = 'Bitte wählen Sie ein Zielgebiet aus'
-      break
-
-    case 'terms':
-      if (!formData.terms)
-        errors.terms = 'Sie müssen den Datenschutzbestimmungen zustimmen'
-      break
-  }
 }
 
-const validate = () => {
-  Object.keys(errors).forEach(key => delete errors[key])
-  ;['clothing', 'crisisArea', 'terms'].forEach(field => validateField(field))
-  return Object.keys(errors).length === 0
-}
+const { formData, errors, validateField, validate } = useFormValidation(initialFormData)
 
 const toggleClothingType = (value) => {
   const idx = formData.clothing.indexOf(value)
