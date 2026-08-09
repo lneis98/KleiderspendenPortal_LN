@@ -444,19 +444,12 @@ const yearOptions = computed(() => {
 
 const updatePickupDate = () => {
   if (formData.pickupDateDay && formData.pickupDateMonth && formData.pickupDateYear) {
-    formData.pickupDate = `${formData.pickupDateYear}-${formData.pickupDateMonth}-${formData.pickupDateDay}`
-    
-    // Prüfe, ob die Datumskombination gültig ist (z.B. 31. Februar)
-    const testDate = new Date(formData.pickupDate)
-    if (isNaN(testDate.getTime()) || testDate.toISOString().substring(0, 10) !== formData.pickupDate) {
-      errors.pickupDate = 'Ungültiges Datum (z.B. 31. Februar existiert nicht)'
-    } else {
-      // Lösche Fehler, wenn Datum gültig ist
-      delete errors.pickupDate
-    }
+    // Pad mit Nullen für gültiges YYYY-MM-DD Format
+    const day = String(formData.pickupDateDay).padStart(2, '0')
+    const month = String(formData.pickupDateMonth).padStart(2, '0')
+    formData.pickupDate = `${formData.pickupDateYear}-${month}-${day}`
   } else {
     formData.pickupDate = ''
-    // Fehler nur beim Submit zeigen, nicht während der Eingabe
   }
 }
 

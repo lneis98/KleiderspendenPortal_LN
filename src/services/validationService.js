@@ -150,7 +150,8 @@ class ValidationService {
   }
 
   /**
-   * Validate date (must be in the future)
+   * Validate date (must be in the future AND must be a valid calendar date)
+   * Checks for invalid dates like February 31st
    * @param {string} value - Date to validate (YYYY-MM-DD format)
    * @returns {Object} - { isValid: boolean, error: string }
    */
@@ -158,13 +159,33 @@ class ValidationService {
     if (!value || value.trim().length === 0) {
       return { isValid: false, error: 'Datum ist erforderlich' };
     }
+
+    // Prüfe zuerst, ob das Datum EXISTIERT (z.B. 31. Februar ist ungültig)
+    const [year, month, day] = value.split('-').map(Number);
     
-    const selectedDate = new Date(value);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Erstelle ein Datum von dem Input
+    const testDate = new Date(year, month - 1, day);
     
-    if (selectedDate < today) {
-      return { isValid: false, error: 'Datum muss in der Zukunft liegen' };
+    // Überprüfe, ob das resultierende Datum dem Input entspricht
+    // Wenn nicht (z.B. 31.02. -> 2.03.), ist das Input-Datum ungültig
+    if (
+      testDate.getFullYear() !== year ||
+      testDate.getMonth() + 1 !== month ||
+      testDate.getDate() !== day
+    ) {
+      return { 
+        isValid: false, 
+        error: 'Ungültiges Datum (z.B. 31. Februar existiert nicht)' 
+      };
+    }
+    
+    // Prüfe, ob das Datum in der Zukunft liegt (mindestens morgen)
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    
+    if (testDate < tomorrow) {
+      return { isValid: false, error: 'Datum muss in der Zukunft liegen (mindestens morgen)' };
     }
     
     return { isValid: true, error: null };
