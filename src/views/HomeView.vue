@@ -81,7 +81,6 @@
         <div class="crisis-grid">
           <article v-for="country in crisisCountries" :key="country.code" class="crisis-card">
             <header class="crisis-header">
-              <img :src="country.flag" :alt="country.name + ' Flagge'" class="crisis-flag" />
               <h3 class="crisis-title">{{ country.name }}</h3>
             </header>
             <p class="crisis-description">
@@ -185,42 +184,36 @@ const crisisCountries = [
   {
     code: 'ua',
     name: 'Ukraine',
-    flag: '/assets/flag-ua.svg',
     description: 'Millionen Menschen benötigen warme Winterkleidung, Schuhe und Unterwäsche. Besonders in den Frontgebieten besteht großer Bedarf.',
     donated: 1580
   },
   {
     code: 'sy',
     name: 'Syrien',
-    flag: '/assets/flag-sy.svg',
     description: 'Besonders Kinderkleidung und Babysachen werden dringend benötigt. Nach dem Erdbeben ist die humanitäre Lage weiterhin kritisch.',
     donated: 1200
   },
   {
     code: 'ye',
     name: 'Jemen',
-    flag: '/assets/flag-ye.svg',
     description: 'Eine der größten humanitären Krisen weltweit. Grundlegende Kleidung für Familien wird dringend benötigt.',
     donated: 730
   },
   {
     code: 'af',
     name: 'Afghanistan',
-    flag: '/assets/flag-af.svg',
     description: 'Großer Bedarf an warmer Kleidung für Familien in abgelegenen Regionen. Besonders Frauen und Kinder benötigen Schutz vor der Kälte.',
     donated: 980
   },
   {
     code: 'so',
     name: 'Somalia',
-    flag: '/assets/flag-so.svg',
     description: 'Nach Jahren der Dürre benötigen Familien grundlegende Kleidung und Schuhe. Kinder sind besonders auf schützende Kleidung angewiesen.',
     donated: 450
   },
   {
     code: 'ht',
     name: 'Haiti',
-    flag: '/assets/flag-ht.svg',
     description: 'Nach Naturkatastrophen brauchen Menschen Kleidung für einen Neuanfang. Viele Familien haben nur das Nötigste.',
     donated: 320
   }
@@ -408,14 +401,6 @@ const crisisCountries = [
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1rem;
-}
-
-.crisis-flag {
-  width: 60px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 4px;
-  flex-shrink: 0;
 }
 
 .crisis-title {
