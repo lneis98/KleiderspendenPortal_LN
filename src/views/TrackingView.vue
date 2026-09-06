@@ -98,25 +98,6 @@
               </div>
             </div>
           </div>
-
-          <div class="tracking-info mt-8 grid md:grid-cols-2 gap-4">
-            <div class="info-box bg-white p-4 rounded-lg shadow-sm">
-              <div class="text-sm text-gray-600 mb-1">Abhol-/Abgabedatum</div>
-              <div class="text-lg font-semibold text-gray-900">{{ trackingData.pickupDate }}</div>
-            </div>
-            <div class="info-box bg-white p-4 rounded-lg shadow-sm">
-              <div class="text-sm text-gray-600 mb-1">Typ</div>
-              <div class="text-lg font-semibold text-gray-900">{{ trackingData.type }}</div>
-            </div>
-            <div class="info-box bg-white p-4 rounded-lg shadow-sm">
-              <div class="text-sm text-gray-600 mb-1">Menge</div>
-              <div class="text-lg font-semibold text-gray-900">{{ trackingData.quantity }}</div>
-            </div>
-            <div class="info-box bg-white p-4 rounded-lg shadow-sm">
-              <div class="text-sm text-gray-600 mb-1">Zielregion</div>
-              <div class="text-lg font-semibold text-gray-900">{{ trackingData.destination }}</div>
-            </div>
-          </div>
         </section>
 
         <!-- Error Message -->
@@ -261,7 +242,7 @@ const handleSearch = () => {
           { 
             step: 1, 
             title: 'Registriert', 
-            description: 'Ihre Spende wurde erfasst', 
+            description: 'Ihre spende ist in der Geschäftsstelle Birkenau eingegangen', 
             date: getCurrentTimestamp()
           }
         ]

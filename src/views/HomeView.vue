@@ -81,6 +81,7 @@
         <div class="crisis-grid">
           <article v-for="country in crisisCountries" :key="country.code" class="crisis-card">
             <header class="crisis-header">
+              <img v-if="country.flag" :src="country.flag" :alt="`${country.name} Flagge`" class="crisis-flag" />
               <h3 class="crisis-title">{{ country.name }}</h3>
             </header>
             <p class="crisis-description">
@@ -184,36 +185,42 @@ const crisisCountries = [
   {
     code: 'ua',
     name: 'Ukraine',
+    flag: '/assets/Flag_Ukraine.svg',
     description: 'Millionen Menschen benötigen warme Winterkleidung, Schuhe und Unterwäsche. Besonders in den Frontgebieten besteht großer Bedarf.',
     donated: 1580
   },
   {
     code: 'sy',
     name: 'Syrien',
+    flag: '/assets/Flag_Syria.svg',
     description: 'Besonders Kinderkleidung und Babysachen werden dringend benötigt. Nach dem Erdbeben ist die humanitäre Lage weiterhin kritisch.',
     donated: 1200
   },
   {
     code: 'ye',
     name: 'Jemen',
+    flag: '/assets/Flag_Yemen.svg',
     description: 'Eine der größten humanitären Krisen weltweit. Grundlegende Kleidung für Familien wird dringend benötigt.',
     donated: 730
   },
   {
     code: 'af',
     name: 'Afghanistan',
+    flag: '/assets/Flag_Afghanistan.svg',
     description: 'Großer Bedarf an warmer Kleidung für Familien in abgelegenen Regionen. Besonders Frauen und Kinder benötigen Schutz vor der Kälte.',
     donated: 980
   },
   {
     code: 'so',
     name: 'Somalia',
+    flag: '/assets/Flag_Somalia.svg',
     description: 'Nach Jahren der Dürre benötigen Familien grundlegende Kleidung und Schuhe. Kinder sind besonders auf schützende Kleidung angewiesen.',
     donated: 450
   },
   {
     code: 'ht',
     name: 'Haiti',
+    flag: '/assets/Flag_Haiti.svg',
     description: 'Nach Naturkatastrophen brauchen Menschen Kleidung für einen Neuanfang. Viele Familien haben nur das Nötigste.',
     donated: 320
   }
@@ -399,8 +406,17 @@ const crisisCountries = [
 .crisis-header {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   margin-bottom: 1rem;
+}
+
+.crisis-flag {
+  width: 60px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
 }
 
 .crisis-title {
