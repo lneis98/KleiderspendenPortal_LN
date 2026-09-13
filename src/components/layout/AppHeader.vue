@@ -15,8 +15,7 @@
             <span class="logo-title text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight">
               Kleider<span class="text-purple-600">Spende</span>
             </span>
-            <p class="logo-subtitle text-sm sm:text-base font-semibold text-gray-600 m-0 leading-none md:hidden">Kleiderverein Birkenau</p>
-            <p class="logo-subtitle text-xs sm:text-sm font-semibold text-gray-600 m-0 leading-none hidden md:block">Birkenau</p>
+            <p class="logo-subtitle text-sm sm:text-base font-semibold text-gray-600 m-0 leading-none">Birkenau</p>
             <p class="logo-tagline text-xs text-gray-500 m-0 max-w-[200px] leading-tight hidden lg:block">
               Helfen Sie mit Ihrer Kleiderspende aktuellen Krisenländern weltweit
             </p>

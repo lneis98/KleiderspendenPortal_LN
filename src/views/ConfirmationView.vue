@@ -40,8 +40,8 @@
               <h2 class="card-title text-lg font-bold text-gray-900">Spendendetails</h2>
             </div>
             <dl class="card-content space-y-3">
-              <div class="detail-row">
-                <dt class="text-gray-600 font-medium text-sm mb-1">Kleidungsarten:</dt>
+              <div class="detail-row flex justify-between">
+                <dt class="text-gray-600 font-medium">Kleidungsarten:</dt>
                 <dd class="text-gray-900 font-semibold">{{ clothingTypesText }}</dd>
               </div>
               <div v-if="donationData.quantity" class="detail-row flex justify-between">
