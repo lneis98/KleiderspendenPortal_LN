@@ -5,7 +5,7 @@
       
       <div class="bg-white rounded-xl shadow-md p-8 space-y-6">
         <section>
-          <h2 class="text-2xl font-bold text-gray-900 mb-3">Angaben gemäß § 5 TMG</h2>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">Angaben gemäß § 5 DDG</h2>
           <p class="text-gray-700">
             Kleiderspende Birkenau e.V.<br>
             Hauptstraße 123<br>
@@ -38,7 +38,7 @@
         </section>
 
         <section>
-          <h2 class="text-2xl font-bold text-gray-900 mb-3">Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
           <p class="text-gray-700">
             Max Mustermann<br>
             Hauptstraße 123<br>
